@@ -1,5 +1,6 @@
 package br.com.casadocodigo.loja.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -38,26 +39,35 @@ public class UsuarioDAO implements UserDetailsService {
 	public List<Usuario> listar() {
 		return manager.createQuery("select distinct(u) from Usuario u", Usuario.class).getResultList();
 	}
-	
+
 	public List<Usuario> buscaPorEmail(String email) {
 		List<Usuario> usuarios = manager.createQuery("select u from Usuario u where email = :email", Usuario.class)
 				.setParameter("email", email).getResultList();
-		
+
 		return usuarios;
 	}
-	
+
 	public Usuario buscaPorNome(String nome) {
 		Usuario usuario = manager.createQuery("select u from Usuario u where nome = :nome", Usuario.class)
-		.setParameter("nome", nome)
-		.getSingleResult();
+				.setParameter("nome", nome).getSingleResult();
 		return usuario;
 	}
-	
-	public void updateRole(String email, String nomeRole) {
-		manager.createQuery("insert into usuario_role(email, role_nome) "
-				+ "VALUES(:email, :nome)")
-		.setParameter("email", email)
-		.setParameter("nome", nomeRole);
+
+	public void updateRole(String nome, String[] role) {
+
+		Usuario usuario = buscaPorNome(nome);
+		List<Role> roles = new ArrayList<>();
+		
+		for (int i = 0; i < role.length; i++) {
+
+			if (!role[i].isEmpty()) {
+				roles.add(new Role(role[i]));
+			}
+		}
+		
+		usuario.setRoles(roles);
+		manager.merge(usuario);
+
 	}
-	
+
 }

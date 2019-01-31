@@ -1,8 +1,8 @@
 package br.com.casadocodigo.loja.controllers;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.plaf.synth.SynthSeparatorUI;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +13,6 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -89,17 +88,13 @@ public class UsuarioController {
 	
 	@RequestMapping(value="/atualizar/{nome}")
 	@Transactional
-	public ModelAndView setPermissao(@PathVariable("nome") String nome, @RequestParam List<Role> roles, RedirectAttributes redirectAttributes) {
+	public ModelAndView setPermissao(@PathVariable("nome") String nome, @RequestParam String [] roles, RedirectAttributes redirectAttributes) {
 		
-		Usuario usuario = usuarioDao.buscaPorNome(nome);
-				
-		System.out.println(usuario.getNome());
+		System.out.println(nome);
 		
 		System.out.println(roles);
 		
-		usuario.setRoles(roles);
-		
-		usuarioDao.updateRole(usuario.getEmail(), roles.get(0).getNome());
+		usuarioDao.updateRole(nome, roles);
 		
 		redirectAttributes.addFlashAttribute("sucesso", "Permissões alteradas com sucesso");
 		return new ModelAndView("redirect:/usuarios");

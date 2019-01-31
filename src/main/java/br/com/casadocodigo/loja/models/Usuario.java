@@ -31,7 +31,7 @@ public class Usuario implements UserDetails {
 	private String nome;
 
 	@NotBlank(message = "O campo Senha é obrigatório")
-	@Size(min = 5)
+	@Size(min = 5, message="A senha deve ter no mínimo 5 caracteres")
 	private String senha;
 
 	@NotBlank(message = "É necessária a confirmação da senha")
